@@ -2093,7 +2093,7 @@
   "resolved" "https://registry.npmjs.org/colors/-/colors-1.4.0.tgz"
   "version" "1.4.0"
 
-"colorsys@^1.0.17":
+"colorsys@^1.0.17", "colorsys@^1.0.22":
   "integrity" "sha512-KCqF23oqkOD0IUCTLCl0obwGIMyeGFlNWuJ4oRRVKmawvKQeb3x5UvajVeH9AShZWU9hNaIhjXeTGw3iPNtl/Q=="
   "resolved" "https://registry.npmjs.org/colorsys/-/colorsys-1.0.22.tgz"
   "version" "1.0.22"
@@ -5306,13 +5306,18 @@
     "jscodeshift" "^0.11.0"
     "nullthrows" "^1.1.1"
 
-"react-native-color-wheel@github:netbeast/react-native-color-wheel":
-  "resolved" "git+ssh://git@github.com/netbeast/react-native-color-wheel.git#8cf9b24e0e9d7806b7f77ada22568ff20c461bd5"
+"react-native-color-wheel@github:AbdulBsit/react-native-color-wheel#patch-1":
+  "resolved" "git+ssh://git@github.com/AbdulBsit/react-native-color-wheel.git#5c0bb33966e0c8d3fbd65196e28e9e2a0171c78c"
   "version" "0.1.7"
   dependencies:
     "colorsys" "^1.0.17"
 
-"react-native@*", "react-native@>=0.36", "react-native@0.66.4":
+"react-native-serialport@^1.3.1":
+  "integrity" "sha512-YfzSUCOKFKJaYV7cBh5cYUY3OlPy7T3wydRHBeLr5m9smynroyXspMJJ9pR8PsQ8FS3dWHORZLoKfy+RhXCXjQ=="
+  "resolved" "https://registry.npmjs.org/react-native-serialport/-/react-native-serialport-1.3.1.tgz"
+  "version" "1.3.1"
+
+"react-native@*", "react-native@^0.59.0", "react-native@>=0.36", "react-native@0.66.4":
   "integrity" "sha512-9vx5dlSfQlKbbDtr8+xMon6qsmSu7jvjdXWZpEKh3XVKpUidbbODv7048gwVKX8YAel1egeR7hN8vzSeI6ssTw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.66.4.tgz"
   "version" "0.66.4"
@@ -5372,7 +5377,12 @@
     "react-shallow-renderer" "^16.13.1"
     "scheduler" "^0.20.2"
 
-"react@^16.0.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@>=16.0.0", "react@17.0.2":
+"react-usestateref@^1.0.8":
+  "integrity" "sha512-whaE6H0XGarFKwZ3EYbpHBsRRCLZqdochzg/C7e+b6VFMTA3LS3K4ZfpI4NT40iy83jG89rGXrw70P9iDfOdsA=="
+  "resolved" "https://registry.npmjs.org/react-usestateref/-/react-usestateref-1.0.8.tgz"
+  "version" "1.0.8"
+
+"react@^16.0.0 || ^17.0.0", "react@^16.8.0 || ^17.0.0", "react@>=16.0.0", "react@>16.0.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
