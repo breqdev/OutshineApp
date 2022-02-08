@@ -50,7 +50,8 @@ const App = () => {
       if (dirty.current) {
         const message =
           colorRef.current.replace('#', '').toUpperCase() +
-          activeModeRef.current;
+          activeModeRef.current +
+          '\n'.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase();
         console.log(message);
         writeData(message);
         dirty.current = false;
