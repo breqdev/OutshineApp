@@ -17,28 +17,30 @@ import {
 } from 'react-native';
 import {ColorWheel} from 'react-native-color-wheel';
 import colorsys from 'colorsys';
-import useStateRef from 'react-usestateref';
 import MODES from './modes';
 import useSerial from './useSerial';
 import Slider from '@react-native-community/slider';
+import useInterval from 'use-interval';
 
 const alterBrightness = (hex, brightness) => {
-  const hsl = colorsys.hex2Hsl(hex);
-  const brightened = {...hsl, l: brightness};
-  return colorsys.hsl2Hex(brightened);
+  const hsv = colorsys.hex2Hsv(hex);
+  const brightened = {...hsv, v: (brightness / 255) * 100};
+  const brightnedHex = colorsys.hsv2Hex(brightened);
+
+  return brightnedHex;
 };
 
 const App = () => {
   const {connectSerial, writeData, connected} = useSerial();
 
-  const [color, setColor, colorRef] = useStateRef('#ffffff');
-  const [brightness, setBrightness, brightnessRef] = useStateRef(1);
-  const [activeMode, setActiveMode, activeModeRef] = useStateRef('01');
+  const [color, setColor] = React.useState('#ffffff');
+  const [brightness, setBrightness] = React.useState(1);
+  const [activeMode, setActiveMode] = React.useState('01');
   const dirty = React.useRef(false);
 
   const handleColorUpdate = React.useCallback(
-    color => {
-      const hex = colorsys.hsv2Hex(color);
+    newColor => {
+      const hex = colorsys.hsv2Hex(newColor);
       setColor(hex);
       dirty.current = true;
     },
@@ -61,25 +63,20 @@ const App = () => {
     [setActiveMode],
   );
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      if (dirty.current) {
-        const rgb = alterBrightness(colorRef.current, brightnessRef.current);
+  useInterval(() => {
+    if (dirty.current) {
+      console.log('in interval', color);
+      const rgb = alterBrightness(color, brightness);
 
-        const message =
-          rgb.replace('#', '').toUpperCase() +
-          activeModeRef.current +
-          '\n'.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase();
-        console.log(message);
-        writeData(message);
-        dirty.current = false;
-      }
-    }, 200);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [activeModeRef, colorRef, writeData, brightnessRef]);
+      const message =
+        rgb.replace('#', '').toUpperCase() +
+        activeMode +
+        '\n'.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase();
+      console.log(message);
+      writeData(message);
+      dirty.current = false;
+    }
+  }, 200);
 
   return (
     <SafeAreaView style={styles.container}>
