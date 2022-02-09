@@ -28,6 +28,10 @@ const MODES = [
     name: 'Scanner',
   },
   {
+    code: '34',
+    name: 'Circle',
+  },
+  {
     code: '40',
     name: 'Chase',
   },
