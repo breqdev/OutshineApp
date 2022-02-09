@@ -22,12 +22,25 @@ import useSerial from './useSerial';
 import Slider from '@react-native-community/slider';
 import useInterval from 'use-interval';
 
-const alterBrightness = (hex, brightness) => {
-  const hsv = colorsys.hex2Hsv(hex);
-  const brightened = {...hsv, v: (brightness / 255) * 100};
-  const brightnedHex = colorsys.hsv2Hex(brightened);
+const alterBrightness = (color, brightness) => {
+  const clamp = value => {
+    if (value < 10) {
+      return 0;
+    } else if (value > 250) {
+      return 255;
+    } else {
+      return value;
+    }
+  };
 
-  return brightnedHex;
+  color = colorsys.hex2Rgb(color);
+  color = {r: clamp(color.r), g: clamp(color.g), b: clamp(color.b)};
+
+  color = colorsys.rgb2Hsv(color);
+  color = {...color, v: (brightness / 255) * 100};
+  color = colorsys.hsv2Hex(color);
+
+  return color;
 };
 
 const App = () => {
