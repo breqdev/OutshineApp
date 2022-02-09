@@ -2,6 +2,8 @@ import React from 'react';
 import {RNSerialport} from 'react-native-serialport';
 
 export default function useSerial() {
+  const [connected, setConnected] = React.useState(false);
+
   React.useEffect(() => {
     RNSerialport.startUsbService();
 
@@ -29,6 +31,7 @@ export default function useSerial() {
         console.log('Raspberry Pi found on', raspberrypi[0].name);
 
         RNSerialport.connectDevice(raspberrypi[0].name, 115200);
+        setConnected(true);
 
         console.log('Connected to', raspberrypi[0].name);
       }
@@ -42,5 +45,6 @@ export default function useSerial() {
   return {
     connectSerial,
     writeData,
+    connected,
   };
 }
