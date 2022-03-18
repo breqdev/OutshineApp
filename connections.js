@@ -1,4 +1,5 @@
 import React from 'react';
+import {Platform, PermissionsAndroid} from 'react-native';
 import {RNSerialport} from 'react-native-serialport';
 import {BleManager} from 'react-native-ble-plx';
 
@@ -57,12 +58,37 @@ export function useBle() {
   React.useEffect(() => {
     manager.current = new BleManager();
 
+    console.log('constructing manager');
+
+    if (Platform.OS === 'android' && Platform.Version >= 23) {
+      PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      ).then(result => {
+        if (result) {
+          console.log('Permission is OK');
+          // this.retrieveConnected()
+        } else {
+          PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+          ).then(res => {
+            if (res) {
+              console.log('User accept');
+            } else {
+              console.log('User refuse');
+            }
+          });
+        }
+      });
+    }
+
     return () => {
       manager.current.destroy();
     };
-  });
+  }, []);
 
   const connect = React.useCallback(() => {
+    console.log('attempting connection');
+
     const subscription = manager.current.onStateChange(state => {
       console.log('BLE state changed', state);
 

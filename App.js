@@ -87,7 +87,7 @@ const App = () => {
         activeMode +
         '\n'.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase();
       console.log(message);
-      serial.write(message);
+      ble.write(message);
       dirty.current = false;
     }
   }, 200);
@@ -96,7 +96,7 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.label}>Outshine</Text>
       <Text style={styles.label}>
-        {serial.connected ? 'Connected' : 'Not Connected'}
+        {ble.connected ? 'Connected' : 'Not Connected'}
       </Text>
       <Text style={styles.label}>
         {alterBrightness(color, brightness)} - {activeMode}
@@ -137,7 +137,7 @@ const App = () => {
         ))}
       </View>
       <View style={styles.configButtons}>
-        <Pressable style={styles.button} onPress={serial.connect}>
+        <Pressable style={styles.button} onPress={ble.connect}>
           <Text style={styles.buttonText}>Connect</Text>
         </Pressable>
       </View>
