@@ -18,7 +18,7 @@ import {
 import {ColorWheel} from 'react-native-color-wheel';
 import colorsys from 'colorsys';
 import MODES from './modes';
-import useSerial from './useSerial';
+import {useBle, useSerial} from './connections';
 import Slider from '@react-native-community/slider';
 import useInterval from 'use-interval';
 
@@ -44,7 +44,8 @@ const alterBrightness = (color, brightness) => {
 };
 
 const App = () => {
-  const {connectSerial, writeData, connected} = useSerial();
+  const serial = useSerial();
+  const ble = useBle();
 
   const [color, setColor] = React.useState('#ffffff');
   const [brightness, setBrightness] = React.useState(1);
@@ -86,7 +87,7 @@ const App = () => {
         activeMode +
         '\n'.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase();
       console.log(message);
-      writeData(message);
+      serial.write(message);
       dirty.current = false;
     }
   }, 200);
@@ -95,7 +96,7 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.label}>Outshine</Text>
       <Text style={styles.label}>
-        {connected ? 'Connected' : 'Not Connected'}
+        {serial.connected ? 'Connected' : 'Not Connected'}
       </Text>
       <Text style={styles.label}>
         {alterBrightness(color, brightness)} - {activeMode}
@@ -136,7 +137,7 @@ const App = () => {
         ))}
       </View>
       <View style={styles.configButtons}>
-        <Pressable style={styles.button} onPress={connectSerial}>
+        <Pressable style={styles.button} onPress={serial.connect}>
           <Text style={styles.buttonText}>Connect</Text>
         </Pressable>
       </View>
