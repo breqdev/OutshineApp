@@ -30,12 +30,13 @@ const App = () => {
           onDisconnect={() => {
             console.log('disconnect');
             if (mode === 'BLE') {
+              ble.disconnect();
             } else {
               serial.disconnect();
             }
             setMode(null);
           }}
-          write={mode === 'BLE' ? () => {} : serial.write}
+          write={mode === 'BLE' ? ble.write : serial.write}
         />
       ) : mode && devices ? (
         <DeviceList
