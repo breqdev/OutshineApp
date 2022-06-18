@@ -1,8 +1,10 @@
 import React from 'react';
-import {RNSerialport} from 'react-native-serialport';
+import {DeviceEventEmitter} from 'react-native';
+import {RNSerialport, actions} from 'react-native-serialport';
 
-export default function useSerial() {
-  const [connected, setConnected] = React.useState(false);
+export function useSerial() {
+  const [device, setDevice] = React.useState(null);
+  const [devices, setDevices] = React.useState([]);
 
   React.useEffect(() => {
     RNSerialport.startUsbService();
@@ -16,35 +18,56 @@ export default function useSerial() {
     };
   }, []);
 
-  const connectSerial = React.useCallback(() => {
-    if (RNSerialport.isOpen()) {
-      console.log('Closing existing connection');
-      RNSerialport.disconnect();
-    }
+  const getDevices = React.useCallback(() => {
+    // if (RNSerialport.isOpen()) {
+    //   console.log('Closing existing connection');
+    //   RNSerialport.disconnect();
+    // }
 
-    RNSerialport.getDeviceList().then(devices => {
-      console.log('Devices:', devices);
+    RNSerialport.getDeviceList().then(setDevices);
+  }, []);
 
-      const raspberrypi = devices.filter(device => device.vendorId === 0x2e8a);
+  const connect = React.useCallback(device => {
+    // if (RNSerialport.isOpen()) {
+    //   console.log('Closing existing connection');
+    //   RNSerialport.disconnect();
+    // }
 
-      if (raspberrypi.length > 0) {
-        console.log('Raspberry Pi found on', raspberrypi[0].name);
+    RNSerialport.connectDevice(device.name, 115200);
+    setDevice(device);
 
-        RNSerialport.connectDevice(raspberrypi[0].name, 115200);
-        setConnected(true);
+    console.log('Connected to', device.name);
 
-        console.log('Connected to', raspberrypi[0].name);
-      }
+    DeviceEventEmitter.addListener(actions.ON_READ_DATA, data => {
+      console.log('Data:', data.payload);
     });
   }, []);
 
-  const writeData = React.useCallback(data => {
-    RNSerialport.writeHexString(data);
+  const write = React.useCallback(data => {
+    console.log(
+      'WRITING',
+      data.map(byte => byte.toString(2).padStart(8, '0')).join(' '),
+    );
+    const hexString = data
+      .map(byte => byte.toString(16).padStart(2, '0'))
+      .join('')
+      .toUpperCase();
+    console.log('Hex:', hexString);
+
+    RNSerialport.writeHexString(hexString);
+  }, []);
+
+  const disconnect = React.useCallback(() => {
+    RNSerialport.disconnect();
+    setDevice(null);
   }, []);
 
   return {
-    connectSerial,
-    writeData,
-    connected,
+    connect,
+    write,
+    device,
+    devices,
+    getDevices,
+    disconnect,
   };
 }
