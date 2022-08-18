@@ -16,6 +16,8 @@ export function useBle() {
   const seen = React.useRef(new Set());
 
   React.useEffect(() => {
+    console.log('checking ble perm');
+
     if (Platform.OS === 'android' && Platform.Version >= 23) {
       PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -26,6 +28,44 @@ export function useBle() {
         } else {
           PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          ).then(res => {
+            if (res) {
+              console.log('User accept');
+            } else {
+              console.log('User refuse');
+            }
+          });
+        }
+      });
+
+      PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      ).then(result => {
+        if (result) {
+          console.log('Permission is OK');
+          // this.retrieveConnected()
+        } else {
+          PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+          ).then(res => {
+            if (res) {
+              console.log('User accept');
+            } else {
+              console.log('User refuse');
+            }
+          });
+        }
+      });
+
+      PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+      ).then(result => {
+        if (result) {
+          console.log('Permission is OK');
+          // this.retrieveConnected()
+        } else {
+          PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
           ).then(res => {
             if (res) {
               console.log('User accept');
